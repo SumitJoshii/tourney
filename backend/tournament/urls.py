@@ -1,0 +1,11 @@
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
+from .views import TournamentTypeViewSet, TournamentViewSet
+
+router = DefaultRouter()
+router.register(r'tournament-types', TournamentTypeViewSet)
+router.register(r'tournaments', TournamentViewSet)
+
+urlpatterns = [
+    path('', include(router.urls)),
+]
