@@ -1,4 +1,4 @@
-import { AxiosInstance, AxiosResponse, ParamsSerializerOptions } from "axios";
+import { AxiosInstance, AxiosResponse, ParamsSerializerOptions } from 'axios';
 
 interface APiHelperConfig {
   api: AxiosInstance;

@@ -11,31 +11,37 @@
           @click="toggleLeftDrawer"
         />
 
-        <q-toolbar-title>
-          Quasar App
-        </q-toolbar-title>
-
-        <div>Quasar v{{ $q.version }}</div>
+        <q-toolbar-title> Tourney - a tournament app! </q-toolbar-title>
+        <q-btn color="green">Create</q-btn>
       </q-toolbar>
     </q-header>
 
-    <q-drawer
-      v-model="leftDrawerOpen"
-      show-if-above
-      bordered
-    >
+    <q-drawer v-model="leftDrawerOpen" show-if-above bordered>
+      <div class="q-pa-md">
+        <q-avatar class="q-pa-xs" style="display: inline-block">
+          <img src="https://cdn.quasar.dev/img/avatar.png" />
+        </q-avatar>
+        <p style="display: inline-block; margin: 15px 0px 0px 30px">
+          Hello, User!
+          <!-- {{ user?.username }} -->
+          <!-- Wew, use '?' -->
+        </p>
+        <hr class="q-mt-md" />
+      </div>
       <q-list>
-        <q-item-label
-          header
-        >
-          Essential Links
-        </q-item-label>
+        <q-item-label header> Essential Links </q-item-label>
 
         <EssentialLink
           v-for="link in linksList"
           :key="link.title"
           v-bind="link"
         />
+        <q-item>
+          <q-item-section>
+            <q-item-label></q-item-label>
+            <q-item-label caption>App Ver. 1.0</q-item-label>
+          </q-item-section>
+        </q-item>
       </q-list>
     </q-drawer>
 
@@ -45,62 +51,34 @@
   </q-layout>
 </template>
 
-<script setup>
-import { ref } from 'vue'
-import EssentialLink from 'components/EssentialLink.vue'
+<script setup lang="ts">
+import { ref } from 'vue';
+import EssentialLink, {
+  EssentialLinkProps,
+} from 'components/EssentialLink.vue';
 
 defineOptions({
-  name: 'MainLayout'
-})
+  name: 'MainLayout',
+});
 
-const linksList = [
-  {
-    title: 'Docs',
-    caption: 'quasar.dev',
-    icon: 'school',
-    link: 'https://quasar.dev'
-  },
+const linksList: EssentialLinkProps[] = [
   {
     title: 'Github',
-    caption: 'github.com/quasarframework',
+    caption: 'github.com/SumitJoshii',
     icon: 'code',
-    link: 'https://github.com/quasarframework'
+    link: 'https://github.com/SumitJoshii',
   },
   {
-    title: 'Discord Chat Channel',
-    caption: 'chat.quasar.dev',
-    icon: 'chat',
-    link: 'https://chat.quasar.dev'
+    title: 'Developer',
+    caption: 'Connect with the Dev Team',
+    icon: 'web',
+    link: 'https://www.linkedin.com/in/sumit-joshi1/',
   },
-  {
-    title: 'Forum',
-    caption: 'forum.quasar.dev',
-    icon: 'record_voice_over',
-    link: 'https://forum.quasar.dev'
-  },
-  {
-    title: 'Twitter',
-    caption: '@quasarframework',
-    icon: 'rss_feed',
-    link: 'https://twitter.quasar.dev'
-  },
-  {
-    title: 'Facebook',
-    caption: '@QuasarFramework',
-    icon: 'public',
-    link: 'https://facebook.quasar.dev'
-  },
-  {
-    title: 'Quasar Awesome',
-    caption: 'Community Quasar projects',
-    icon: 'favorite',
-    link: 'https://awesome.quasar.dev'
-  }
-]
+];
 
-const leftDrawerOpen = ref(false)
+const leftDrawerOpen = ref(false);
 
-function toggleLeftDrawer () {
-  leftDrawerOpen.value = !leftDrawerOpen.value
+function toggleLeftDrawer() {
+  leftDrawerOpen.value = !leftDrawerOpen.value;
 }
 </script>

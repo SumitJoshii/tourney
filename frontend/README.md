@@ -1,6 +1,6 @@
-# Tourney (fe-tournament)
+# Tournament App (tourney)
 
-A Quasar Project
+There are quite a few different ways to run tournaments, but there are about 5 formats that are far more popular than the rest.
 
 ## Install the dependencies
 ```bash

@@ -1,36 +1,75 @@
 <template>
-  <q-page class="q-pl-md">
-    <h3>Welcome to Tourney!</h3>
-    <p>
-      There are quite a few different ways to run tournaments, but there are
-      about 5 formats that are far more popular than the rest.
-    </p>
-    <ul>
-      <li>Single Elimination Tournament</li>
-      <li>Double Elimination Tournament</li>
-      <li>Round Robin</li>
-      <li>Double Round Robin</li>
-      <li>Consolation Tournaments</li>
-    </ul>
-    <q-btn color="green" @click="showCreateForm">Create a tournament!</q-btn>
+  <q-page class="q-pl-md" style="margin: auto; width: 70%">
+    <div style="display: flex; height: 25px; margin-top: 20px">
+      <div style="font-size: large">Tournaments</div>
+      <div>
+        <q-img
+          src="../assets/images/info.png"
+          :ratio="1"
+          style="height: 15px; width: 15px; margin-left: 4px; margin-top: 4px"
+        ></q-img>
+        <q-tooltip>
+          <p>
+            There are quite a few different ways to run tournaments, but there
+            are about 5 formats that are far more popular than the rest.
+          </p>
+          <ul>
+            <li>Single Elimination Tournament</li>
+            <li>Double Elimination Tournament</li>
+            <li>Round Robin</li>
+            <li>Double Round Robin</li>
+            <li>Consolation Tournaments</li>
+          </ul>
+        </q-tooltip>
+      </div>
+    </div>
+
+    <!-- Table -->
+    <div class="q-pa-md">
+      <q-table
+        flat
+        bordered
+        title="Tournaments"
+        :rows="tournaments"
+        :columns="columns"
+        row-key="id"
+        :filter="filter"
+        @row-click="onRowClick"
+      >
+        <template v-slot:top-right>
+          <q-input
+            borderless
+            dense
+            debounce="300"
+            v-model="filter"
+            placeholder="Search"
+          >
+            <template v-slot:append>
+              <q-icon name="search" />
+            </template>
+          </q-input>
+          <q-btn class="q-ml-md" color="green" @click="showCreateForm"
+            >Create!</q-btn
+          >
+        </template>
+      </q-table>
+    </div>
 
     <q-dialog v-model="showCreateFormModal">
       <q-card>
         <p class="q-pa-md q-mb-xs text-center">Create a Tournament.</p>
         <hr />
         <q-card-section>
+          <q-input v-model="newTournament.name" label="Tournament Name" />
           <q-input
-            v-model="newTournament.tournament_name"
-            label="Tournament Name"
-          />
-          <q-select
-            v-model="newTournament.player_count"
-            :options="playerOptions"
+            type="number"
+            v-model="newTournament.number_of_teams"
             label="Number of Players"
           />
           <q-select
-            v-model="newTournament.tournament_type"
-            :options="tournamentOptions"
+            v-model="newTournament.type"
+            :options="tournamentTypes"
+            option-label="name"
             label="Tournament Type"
           />
         </q-card-section>
@@ -42,27 +81,40 @@
   </q-page>
 </template>
 
-<script setup>
-import { onMounted, ref } from "vue";
-import useTournamentApi from "src/api/tournamentApi";
+<script setup lang="ts">
+import { onMounted, ref } from 'vue';
+import useTournamentApi from 'src/api/tournament';
 
-import { useRouter, useRoute } from "vue-router";
+import { useRouter } from 'vue-router';
+import { Tournament, TournamentType } from 'src/models/tournament';
+
+import { QTableProps } from 'quasar';
 
 const router = useRouter();
 
 const tournamentApi = useTournamentApi();
-const tournamentOptions = ref(["one", "two"]);
-const playerOptions = ref(["2", "3", "4"]);
+const tournamentTypes = ref<TournamentType[]>([]);
 const showCreateFormModal = ref(false);
-const newTournament = ref({
-  tournament_name: "",
-  player_count: "",
-  tournament_type: "",
+const dateNow = new Date();
+const newTournament = ref<Tournament>({
+  name: '',
+  number_of_teams: 0,
+  type: {
+    name: '',
+    description: '',
+  },
+  start_date: dateNow.toISOString().split('T')[0],
+  end_date: dateNow.toISOString().split('T')[0],
 });
 
+const tournaments = ref<Tournament[]>([]);
+const filter = ref('');
+
 onMounted(async () => {
-  tournamentOptions.value = await tournamentApi.getTournaments();
-  console.log(tournamentOptions);
+  tournamentTypes.value = await tournamentApi.getTournamentTypes();
+  tournaments.value = await tournamentApi.getTournaments();
+  console.log('All tournaments: ', tournaments.value);
+  console.log('Tournament options: ', tournamentTypes.value);
 });
 
 const showCreateForm = async () => {
@@ -71,6 +123,64 @@ const showCreateForm = async () => {
 
 const addTournament = async () => {
   showCreateFormModal.value = false;
-  router.push({ path: "/match/matches/", params: { newTournament } });
+  const response = await tournamentApi.createTournament(newTournament.value);
+
+  void router.push({
+    name: 'tournament/TournamentDetails',
+    params: { id: response.id },
+  });
 };
+
+const onRowClick = async (evt: Event, row: Tournament) => {
+  void router.push({
+    name: 'tournament/TournamentDetails',
+    params: { id: row.id },
+  });
+};
+
+// Table
+const columns: QTableProps['columns'] = [
+  {
+    name: 'id',
+    required: true,
+    label: 'ID',
+    align: 'center',
+    field: 'id',
+    sortable: true,
+  },
+  {
+    name: 'name',
+    required: true,
+    label: 'Name',
+    align: 'center',
+    field: 'name',
+    sortable: true,
+  },
+  {
+    name: 'start_date',
+    align: 'center',
+    label: 'Start Date',
+    field: 'start_date',
+  },
+  {
+    name: 'end_date',
+    align: 'center',
+    label: 'End Date',
+    field: 'end_date',
+  },
+  {
+    name: 'number_of_teams',
+    align: 'center',
+    label: 'No. Of Teams',
+    field: 'number_of_teams',
+    sortable: true,
+  },
+  {
+    name: 'type',
+    align: 'center',
+    label: 'Type',
+    field: (row: Tournament) => row.type.name,
+    sortable: true,
+  },
+];
 </script>
