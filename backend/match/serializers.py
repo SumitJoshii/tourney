@@ -6,7 +6,7 @@ from team.models import Team
 from tournament.models import Tournament
 from .models import Match
 from tournament.serializers import TournamentReadOnlySerializer
-from team.serializers import TeamReadOnlyWithoutTournamentSerializer
+from team.serializers import TeamReadOnlySerializer
 
 class MatchSerializer(ValidateModelSerializer):
     NESTED_FIELDS_TO_QUERYSET = {
@@ -17,8 +17,10 @@ class MatchSerializer(ValidateModelSerializer):
     # what is this
     
     tournament = TournamentReadOnlySerializer(required=False)
-    team1 = TeamReadOnlyWithoutTournamentSerializer(required=False)
-    team2 = TeamReadOnlyWithoutTournamentSerializer(required=False)
+    team1 = TeamReadOnlySerializer(required=False)
+    team2 = TeamReadOnlySerializer(required=False)
+    score_team1 = serializers.IntegerField(required=True)
+    score_team2 = serializers.IntegerField(required=True)
     
 
     class Meta:

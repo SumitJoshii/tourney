@@ -25,6 +25,8 @@ def convert_validated_nested_field_to_object(
         validated_data[nested_field_name] = (
             queryset.get(id=nested_field["id"]) if nested_field else None
         )
+        print("\n\n\n\n Nested Fields: ", nested_field, nested_field_name)
+        # print("\n\n\n\n Nested Fields: ", nested_field, nested_field_name)
     return validated_data
 
 

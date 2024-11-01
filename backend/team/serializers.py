@@ -23,6 +23,7 @@ class TeamReadOnlySerializer(serializers.ModelSerializer):
     }
     tournament = TournamentReadOnlySerializer(required = False)
 
+    id = serializers.IntegerField(required=False)
     name = serializers.CharField(required = False)
     is_team = serializers.BooleanField(required = False)
     class Meta:
@@ -30,6 +31,7 @@ class TeamReadOnlySerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'is_team', 'tournament']
 
 class TeamReadOnlyWithoutTournamentSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(required=False)
     name = serializers.CharField(required = False)
     is_team = serializers.BooleanField(required = False)
     class Meta:
