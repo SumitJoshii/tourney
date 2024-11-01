@@ -13,8 +13,6 @@ export default () => {
         Match[]
       >,
     saveScore: (tournamentId: number, match: Match) =>
-      apiHelper.put(`match/tournaments/${tournamentId}/matches/${match.id}/`, {
-        data: match,
-      }) as Promise<Match>,
+      apiHelper.patch(`match/tournaments/${tournamentId}/matches/${match.id}/`, match) as Promise<Match>,
   };
 };

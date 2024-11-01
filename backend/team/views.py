@@ -1,10 +1,10 @@
 # team/views.py
 from rest_framework import viewsets
 from .models import Team
-from .serializers import TeamReadOnlySerializer, TeamSerializer
+from .serializers import TeamSerializer
 
 class TeamViewSet(viewsets.ModelViewSet):
-    serializer_class = TeamReadOnlySerializer
+    serializer_class = TeamSerializer
 
     def get_queryset(self):
         tournament_id = self.kwargs.get('tournament_id')

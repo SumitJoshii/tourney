@@ -11,7 +11,9 @@ def convert_validated_nested_field_to_object(
     partial: bool=False,
     many_to_many: bool=False,
 ):
-    print("Validated Data 2: ", validated_data, queryset, nested_field_name)
+    print("\n In convert_validated_nested_field_to_object Validated Data: ", validated_data)
+    print("\n In convert_validated_nested_field_to_object queryset: ", queryset)
+    print("\n In convert_validated_nested_field_to_object nested_field_name: ", nested_field_name)
     if partial and nested_field_name not in validated_data:
         return validated_data
     if many_to_many:
@@ -25,8 +27,9 @@ def convert_validated_nested_field_to_object(
         validated_data[nested_field_name] = (
             queryset.get(id=nested_field["id"]) if nested_field else None
         )
-        print("\n\n\n\n Nested Fields: ", nested_field, nested_field_name)
+        print("\n Nested Fields: ", nested_field, nested_field_name)
         # print("\n\n\n\n Nested Fields: ", nested_field, nested_field_name)
+    print("\n Final Validated Data: ", validated_data)
     return validated_data
 
 

@@ -9,11 +9,12 @@ class ValidateModelSerializer(serializers.ModelSerializer):
 
     def validate(self, attrs):
         validated_data = super().validate(attrs)
+        print("\n\n Validated Data: ", validated_data)
         for nested_field, queryset in self.NESTED_FIELDS_TO_QUERYSET.items():
             validated_data = convert_validated_nested_field_to_object(
                 validated_data, nested_field, queryset, partial=self.partial
             )
-            print("Validated Data: ", validated_data)
+            print("\n In nested_field Validated Data: ", validated_data)
         for (
             nested_many_to_many_field,
             queryset,

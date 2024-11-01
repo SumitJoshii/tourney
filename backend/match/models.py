@@ -3,9 +3,9 @@ from team.models import Team
 from tournament.models import Tournament
 
 class Match(models.Model):
-    tournament = models.ForeignKey(Tournament, on_delete=models.CASCADE, related_name="matches", null=True, blank=True)
-    team1 = models.ForeignKey(Team, on_delete=models.CASCADE, related_name="home_matches", null=True, blank=True)
-    team2 = models.ForeignKey(Team, on_delete=models.CASCADE, related_name="away_matches", null=True, blank=True)
+    tournament = models.ForeignKey(Tournament, on_delete=models.CASCADE, related_name="matches")
+    team1 = models.ForeignKey(Team, on_delete=models.CASCADE, related_name="home_matches")
+    team2 = models.ForeignKey(Team, on_delete=models.CASCADE, related_name="away_matches")
     date = models.DateField(null=True, blank=True)
     score_team1 = models.IntegerField(null=True, blank=True)
     score_team2 = models.IntegerField(null=True, blank=True)
