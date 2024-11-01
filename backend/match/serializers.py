@@ -37,6 +37,8 @@ class MatchSerializer(ValidateModelSerializer):
         
         if instance.score_team1 is not None and instance.score_team2 is not None:
             instance.deciding_factor = abs(instance.score_team1 - instance.score_team2)
+            instance.is_tie = instance.score_team1 == instance.score_team2
+            instance.is_finished = True
             instance.save()
 
         return instance
