@@ -1,5 +1,6 @@
 import { RouteRecordRaw } from 'vue-router';
 import useTournamentRouters from './tournament';
+import useAboutRouters from './about';
 
 const routes: RouteRecordRaw[] = [
   {
@@ -11,6 +12,11 @@ const routes: RouteRecordRaw[] = [
     path: '/tournament/',
     component: () => import('layouts/MainLayout.vue'),
     children: useTournamentRouters(),
+  },
+  {
+    path: '/about/',
+    component: () => import('layouts/MainLayout.vue'),
+    children: useAboutRouters(),
   },
 
   // Always leave this as last one,

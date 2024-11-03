@@ -1,9 +1,11 @@
+import { TeamWithoutTournament } from './team';
+
 export interface Table {
-  name: string;
+  team: TeamWithoutTournament;
   played: number;
   won: number;
   lost: number;
   tie: number;
   points: number;
-  decision_factor: number;
+  cumulative_deciding_factor: number;
 }

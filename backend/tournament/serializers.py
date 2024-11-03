@@ -24,10 +24,11 @@ class TournamentSerializer(ValidateModelSerializer):
         "type": TournamentType.objects.all(),
     }
     type = TournamentTypeReadOnlySerializer(required=False)
+    winner = serializers.CharField(required=False, allow_null=True)
 
     class Meta:
         model = Tournament
-        fields = ['id', 'type', 'name', 'start_date', 'end_date', 'number_of_teams']
+        fields = ['id', 'type', 'name', 'start_date', 'end_date', 'number_of_teams', 'is_finished', 'winner']
 
 
 class TournamentReadOnlySerializer(serializers.ModelSerializer):
@@ -40,9 +41,11 @@ class TournamentReadOnlySerializer(serializers.ModelSerializer):
     end_date = serializers.DateField(required=False)
     number_of_teams = serializers.IntegerField(required=False)
     type = TournamentTypeReadOnlySerializer(required=False)
+    is_finished = serializers.BooleanField(required=False, allow_null=True)
+    winner = serializers.CharField(required=False, allow_null=True)
     
 
     class Meta:
         model = Tournament
-        fields = ['id', 'type', 'name', 'start_date', 'end_date', 'number_of_teams']
+        fields = ['id', 'type', 'name', 'start_date', 'end_date', 'number_of_teams', 'is_finished', 'winner']
 

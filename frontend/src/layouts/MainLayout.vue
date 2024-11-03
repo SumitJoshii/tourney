@@ -12,7 +12,7 @@
         />
 
         <q-toolbar-title> Tourney - a tournament app! </q-toolbar-title>
-        <q-btn color="green">Create</q-btn>
+        <q-btn color="black" @click="goToAbout">About</q-btn>
       </q-toolbar>
     </q-header>
 
@@ -53,13 +53,19 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 import EssentialLink, {
   EssentialLinkProps,
 } from 'components/EssentialLink.vue';
 
+const router = useRouter();
 defineOptions({
   name: 'MainLayout',
 });
+
+const goToAbout = () => {
+  router.push({ name: 'about' });
+};
 
 const linksList: EssentialLinkProps[] = [
   {

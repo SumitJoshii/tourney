@@ -105,6 +105,8 @@ const newTournament = ref<Tournament>({
   },
   start_date: dateNow.toISOString().split('T')[0],
   end_date: dateNow.toISOString().split('T')[0],
+  is_finished: false,
+  winner: null,
 });
 
 const tournaments = ref<Tournament[]>([]);

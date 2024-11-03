@@ -13,6 +13,8 @@ class Tournament(models.Model):
     start_date = models.DateField()
     end_date = models.DateField()
     number_of_teams = models.IntegerField()
+    is_finished = models.BooleanField(db_default=False)
+    winner = models.CharField(max_length=100, null=True, blank=True)
 
     def __str__(self):
         return self.name

@@ -9,7 +9,10 @@
 
       <q-tab-panels v-model="tab" animated>
         <q-tab-panel name="table">
-          <div class="q-pa-md" style="margin: auto; width: 50%">
+          <div
+            class="q-pa-md"
+            style="margin: auto; min-width: 600px; max-width: 900px"
+          >
             <q-table
               class="my-sticky-header-table"
               flat
@@ -18,10 +21,26 @@
               :columns="columns"
               row-key="name"
             />
+            <div class="finishTournament">
+              <q-btn
+                class="q-pa-md"
+                color="primary"
+                size="small"
+                label="Finish Tournament"
+                @click="getWinner()"
+              />
+
+              <q-tooltip transition-show="rotate" transition-hide="rotate">
+                Click to see the winner.</q-tooltip
+              >
+            </div>
           </div>
         </q-tab-panel>
 
-        <q-tab-panel name="matches">
+        <q-tab-panel
+          name="matches"
+          style="margin: auto; min-width: 600px; max-width: 900px"
+        >
           <div class="row q-col-gutter-md">
             <div class="col-6" v-for="(match, index) in matches" :key="index">
               <q-card bordered class="hover-card">
@@ -75,7 +94,7 @@
         </q-tab-panel>
 
         <q-tab-panel name="winner" style="margin: auto; width: 70%">
-          <div>
+          <div v-if="tournamentWinner">
             <div style="width: fit-content; margin: auto; padding: 10px">
               <q-img
                 src="../assets/images/trophy.png"
@@ -85,9 +104,14 @@
             </div>
             <div style="width: fit-content; margin: auto">
               <p style="font-size: large">
-                Congrats [player-name], for winning the tournament!!
+                Congrats {{ tournamentWinner }}, for winning the tournament!!
               </p>
             </div>
+          </div>
+          <div v-else>
+            <p style="text-align: center; font-size: large; color: gray">
+              Tournament yet to be finished
+            </p>
           </div>
         </q-tab-panel>
       </q-tab-panels>
@@ -101,12 +125,12 @@
         <q-input
           v-model="selectedMatch.score_team1"
           type="number"
-          label="Score of Team 1:"
+          :label="`Score of ${selectedMatch.team1.name}`"
         />
         <q-input
           v-model="selectedMatch.score_team2"
           type="number"
-          label="Score of Team 2:"
+          :label="`Score of ${selectedMatch.team2.name}`"
         />
       </q-card-section>
       <q-card-section>
@@ -121,22 +145,29 @@ import { Table } from 'src/models/table';
 import { onMounted, ref } from 'vue';
 import { QTableProps } from 'quasar';
 import { Match } from 'src/models/match';
+// import { Tournament } from 'src/models/tournament';
 import useMatchApi from 'src/api/match';
+import useTournamentApi from 'src/api/tournament';
 import { useRoute } from 'vue-router';
 import { TeamWithoutTournament } from 'src/models/team';
+import confetti from 'canvas-confetti';
 
 const tab = ref('table');
 const matches = ref<Match[]>([]);
 const matchApi = useMatchApi();
+const tournamentApi = useTournamentApi();
 const route = useRoute();
 const tournamentId = ref(0);
 const showMatchEditForm = ref(false);
 const selectedMatch = ref<Match>();
+// const selectedTournament = ref<Tournament>();
+let tournamentWinner = ref();
 
 onMounted(async () => {
   console.log('Route data: ', route.params, route);
   tournamentId.value = Number(route.params.id);
   await getMatches();
+  await getTableInfo();
 });
 
 const openMatchEditForm = (match: Match) => {
@@ -149,12 +180,18 @@ const saveScore = async () => {
   if (selectedMatch.value) {
     await matchApi.saveScore(tournamentId.value, selectedMatch.value);
   }
+  await getMatches();
+  await getTableInfo();
   showMatchEditForm.value = false;
 };
 
 const getMatches = async () => {
   matches.value = await matchApi.getMatches(tournamentId.value);
   console.log('matches data: ', matches.value);
+};
+
+const getTableInfo = async () => {
+  rows.value = await tournamentApi.getTableInfo(tournamentId.value);
 };
 
 const getDecidingFactor = (
@@ -168,6 +205,30 @@ const getDecidingFactor = (
   return '--';
 };
 
+const getWinner = async () => {
+  tournamentWinner.value = rows.value[0].team.name;
+
+  // await tournamentApi.updateTournamentWinner(
+  //   tournamentId.value,
+  //   selectedTournament
+  // );
+
+  // console.log('Tournament: ', selectedTournament);
+
+  setTimeout(() => {
+    tab.value = 'winner';
+
+    // Trigger confetti on the winner page
+    setTimeout(() => {
+      confetti({
+        particleCount: 100,
+        spread: 70,
+        origin: { y: 0.6 },
+      });
+    }, 500); // Optional: delay confetti slightly after tab switch
+  }, 800);
+};
+
 // table
 // TS is the Best. Read
 
@@ -177,7 +238,7 @@ const columns: QTableProps['columns'] = [
     required: true,
     label: 'Name',
     align: 'center',
-    field: (row: Table) => row.name,
+    field: (row: Table) => row.team.name,
 
     sortable: true,
   },
@@ -197,118 +258,16 @@ const columns: QTableProps['columns'] = [
     field: 'points',
     sortable: true,
   },
+  {
+    name: 'cumulative_deciding_factor',
+    align: 'center',
+    label: 'CDF',
+    field: 'cumulative_deciding_factor',
+    sortable: true,
+  },
 ];
 
-const rows: Table[] = [
-  {
-    name: 'Sumit',
-    played: 5,
-    won: 2,
-    lost: 2,
-    tie: 1,
-    points: 4,
-    decision_factor: 0,
-  },
-  {
-    name: 'Shubham',
-    played: 5,
-    won: 3,
-    lost: 2,
-    tie: 0,
-    points: 4,
-    decision_factor: 0,
-  },
-  {
-    name: 'Rahul',
-    played: 5,
-    won: 4,
-    lost: 1,
-    tie: 0,
-    points: 7,
-    decision_factor: 0,
-  },
-  {
-    name: 'Player 1',
-    played: 5,
-    won: 2,
-    lost: 2,
-    tie: 1,
-    points: 4,
-    decision_factor: 0,
-  },
-  {
-    name: 'Player 2',
-    played: 5,
-    won: 2,
-    lost: 2,
-    tie: 1,
-    points: 4,
-    decision_factor: 0,
-  },
-  {
-    name: 'Player 3',
-    played: 5,
-    won: 2,
-    lost: 2,
-    tie: 1,
-    points: 4,
-    decision_factor: 0,
-  },
-  {
-    name: 'Player 4',
-    played: 5,
-    won: 2,
-    lost: 2,
-    tie: 1,
-    points: 4,
-    decision_factor: 0,
-  },
-  {
-    name: 'Player 5',
-    played: 5,
-    won: 2,
-    lost: 2,
-    tie: 1,
-    points: 4,
-    decision_factor: 0,
-  },
-  {
-    name: 'Player 6',
-    played: 5,
-    won: 2,
-    lost: 2,
-    tie: 1,
-    points: 4,
-    decision_factor: 0,
-  },
-  {
-    name: 'Player 7',
-    played: 5,
-    won: 2,
-    lost: 2,
-    tie: 1,
-    points: 4,
-    decision_factor: 0,
-  },
-  {
-    name: 'Player 8',
-    played: 5,
-    won: 2,
-    lost: 2,
-    tie: 1,
-    points: 4,
-    decision_factor: 0,
-  },
-  {
-    name: 'Player 9',
-    played: 5,
-    won: 2,
-    lost: 2,
-    tie: 1,
-    points: 4,
-    decision_factor: 0,
-  },
-];
+const rows = ref<Table[]>([]);
 </script>
 
 <style scoped>
@@ -326,5 +285,11 @@ const rows: Table[] = [
 
 .hover-card:hover .hover-edit {
   display: inline-flex;
+}
+
+.finishTournament {
+  width: fit-content;
+  margin: auto;
+  margin-top: 10px;
 }
 </style>

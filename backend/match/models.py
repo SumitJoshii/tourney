@@ -17,6 +17,7 @@ class Match(models.Model):
     def __str__(self):
         return f"{self.team1.name} vs {self.team2.name} - {self.tournament.name}"
 
+    #Check
     @property
     def winner(self):
         if self.score_team1 is not None and self.score_team2 is not None:

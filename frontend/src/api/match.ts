@@ -13,6 +13,9 @@ export default () => {
         Match[]
       >,
     saveScore: (tournamentId: number, match: Match) =>
-      apiHelper.patch(`match/tournaments/${tournamentId}/matches/${match.id}/`, match) as Promise<Match>,
+      apiHelper.patch(
+        `match/tournaments/${tournamentId}/matches/${match.id}/`,
+        match
+      ) as Promise<Match>,
   };
 };

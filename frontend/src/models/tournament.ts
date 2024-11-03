@@ -11,4 +11,6 @@ export interface Tournament {
   type: TournamentType;
   start_date: string;
   end_date: string;
+  is_finished: boolean;
+  winner: string | null;
 }
