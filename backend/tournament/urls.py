@@ -9,5 +9,6 @@ router.register(r'tournaments', TournamentViewSet)
 urlpatterns = [
     path('', include(router.urls)),
     path('info/<int:tournament_id>/table-info/', TableViewSet.as_view({'get': 'list'}), name='tournament-table'),
-    
+    path('<int:pk>/update_winner/', TournamentViewSet.as_view({'post': 'update_winner'}), name='update-winner')
+
 ]

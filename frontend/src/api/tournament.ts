@@ -29,11 +29,14 @@ export default () => {
         `team/tournaments/${tournamentId}/teams/${teamId}`,
         playerName
       ) as Promise<TeamWithoutTournament>,
-    updateTournamentWinner: (tournamentId: number, tournament: Tournament) =>
-      apiHelper.patch(
-        `tournament/tournaments/${tournamentId}/`,
-        tournament.winner
-      ),
+    updateTournamentWinner: (tournamentId: number, winnerName: string) =>
+      apiHelper.post(`tournament/${tournamentId}/update_winner/`, {
+        winner: winnerName,
+      }),
+    getTournament: (tournamentId: number) =>
+      apiHelper.get(
+        `tournament/tournaments/${tournamentId}/`
+      ) as Promise<Tournament>,
     getTableInfo: (tournamentId: number) =>
       apiHelper.get(`tournament/info/${tournamentId}/table-info`) as Promise<
         Table[]

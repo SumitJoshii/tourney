@@ -1,4 +1,5 @@
 from rest_framework import viewsets, status
+from rest_framework.decorators import action
 
 from team.serializers import TeamReadOnlyWithoutTournamentSerializer
 from .models import TournamentType, Tournament
@@ -42,6 +43,33 @@ class TournamentViewSet(viewsets.ModelViewSet):
             Match.objects.create(tournament=tournament, team1=team1, team2=team2, date=tournament.start_date)
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+    
+    @action(detail=True, methods=['post'])
+    def update_winner(self, request, pk=None):
+        try:
+            tournament = self.get_object()
+            winner_name = request.data.get('winner')
+
+            if not winner_name:
+                return Response(
+                    {"error": "Winner name is required."},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+
+            # Update the tournament winner
+            tournament.winner = winner_name
+            tournament.is_finished = True
+            tournament.save()
+
+            return Response(
+                {"message": "Tournament winner updated successfully"},
+                status=status.HTTP_200_OK
+            )
+        except Tournament.DoesNotExist:
+            return Response(
+                {"error": "Tournament not found"},
+                status=status.HTTP_404_NOT_FOUND
+            )
 
 
 class TableViewSet(viewsets.ViewSet):

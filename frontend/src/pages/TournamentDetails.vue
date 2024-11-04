@@ -166,6 +166,9 @@ let tournamentWinner = ref();
 onMounted(async () => {
   console.log('Route data: ', route.params, route);
   tournamentId.value = Number(route.params.id);
+
+  const tournament = await tournamentApi.getTournament(tournamentId.value);
+  tournamentWinner.value = tournament.winner;
   await getMatches();
   await getTableInfo();
 });
@@ -206,26 +209,22 @@ const getDecidingFactor = (
 };
 
 const getWinner = async () => {
-  tournamentWinner.value = rows.value[0].team.name;
+  const winnerName = rows.value[0].team.name;
+  await tournamentApi.updateTournamentWinner(tournamentId.value, winnerName);
 
-  // await tournamentApi.updateTournamentWinner(
-  //   tournamentId.value,
-  //   selectedTournament
-  // );
+  console.log('Winner updated: ', winnerName);
 
-  // console.log('Tournament: ', selectedTournament);
-
+  tournamentWinner.value = winnerName;
   setTimeout(() => {
     tab.value = 'winner';
 
-    // Trigger confetti on the winner page
     setTimeout(() => {
       confetti({
         particleCount: 100,
         spread: 70,
         origin: { y: 0.6 },
       });
-    }, 500); // Optional: delay confetti slightly after tab switch
+    }, 500);
   }, 800);
 };
 
