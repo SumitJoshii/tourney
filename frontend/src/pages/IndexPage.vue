@@ -1,41 +1,47 @@
 <template>
   <q-page class="q-pl-md" style="margin: auto; width: 70%">
-    <div style="display: flex; height: 25px; margin-top: 20px">
-      <div style="font-size: large">Tournaments</div>
-      <div>
-        <q-img
-          src="../assets/images/info.png"
-          :ratio="1"
-          style="height: 15px; width: 15px; margin-left: 4px; margin-top: 4px"
-        ></q-img>
-        <q-tooltip>
-          <p>
-            There are quite a few different ways to run tournaments, but there
-            are about 5 formats that are far more popular than the rest.
-          </p>
-          <ul>
-            <li>Single Elimination Tournament</li>
-            <li>Double Elimination Tournament</li>
-            <li>Round Robin</li>
-            <li>Double Round Robin</li>
-            <li>Consolation Tournaments</li>
-          </ul>
-        </q-tooltip>
-      </div>
-    </div>
-
     <!-- Table -->
-    <div class="q-pa-md">
+    <div class="q-pa-md q-mt-lg">
       <q-table
         flat
         bordered
-        title="Tournaments"
         :rows="tournaments"
         :columns="columns"
         row-key="id"
         :filter="filter"
         @row-click="onRowClick"
       >
+        <template v-slot:top-left>
+          <div style="display: flex; height: 25px">
+            <div style="font-size: large">Tournaments</div>
+            <div>
+              <q-img
+                src="../assets/images/info.png"
+                :ratio="1"
+                style="
+                  height: 15px;
+                  width: 15px;
+                  margin-left: 4px;
+                  margin-top: 4px;
+                "
+              ></q-img>
+              <q-tooltip>
+                <p>
+                  There are quite a few different ways to run tournaments, but
+                  there are about 5 formats that are far more popular than the
+                  rest.
+                </p>
+                <ul>
+                  <li>Single Elimination Tournament</li>
+                  <li>Double Elimination Tournament</li>
+                  <li>Round Robin</li>
+                  <li>Double Round Robin</li>
+                  <li>Consolation Tournaments</li>
+                </ul>
+              </q-tooltip>
+            </div>
+          </div>
+        </template>
         <template v-slot:top-right>
           <q-input
             borderless

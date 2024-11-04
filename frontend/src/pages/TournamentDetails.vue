@@ -20,7 +20,23 @@
               :rows="rows"
               :columns="columns"
               row-key="name"
-            />
+            >
+              <template v-slot:body-cell-name="props">
+                <q-td :props="props">
+                  <div class="hover-edit-cell">
+                    <span>{{ props.row.team.name }}</span>
+                    <q-btn
+                      class="edit-button"
+                      color="black"
+                      icon="edit"
+                      round
+                      size="xs"
+                      @click="openNameEditForm(props.row.team)"
+                    ></q-btn>
+                  </div>
+                </q-td>
+              </template>
+            </q-table>
             <div class="finishTournament">
               <q-btn
                 class="q-pa-md"
@@ -138,6 +154,20 @@
       </q-card-section>
     </q-card>
   </q-dialog>
+  <q-dialog v-model="showEditDialog" persistent>
+    <q-card>
+      <q-card-section>
+        <div class="text-h6">Edit Team</div>
+      </q-card-section>
+      <q-card-section>
+        <q-input v-model="teamName" label="Team Name" autofocus />
+      </q-card-section>
+      <q-card-actions>
+        <q-btn color="primary" label="Save" @click="updateNameChange" />
+        <q-btn color="grey" label="Cancel" @click="showEditDialog = false" />
+      </q-card-actions>
+    </q-card>
+  </q-dialog>
 </template>
 
 <script setup lang="ts">
@@ -145,7 +175,6 @@ import { Table } from 'src/models/table';
 import { onMounted, ref } from 'vue';
 import { QTableProps } from 'quasar';
 import { Match } from 'src/models/match';
-// import { Tournament } from 'src/models/tournament';
 import useMatchApi from 'src/api/match';
 import useTournamentApi from 'src/api/tournament';
 import { useRoute } from 'vue-router';
@@ -160,7 +189,9 @@ const route = useRoute();
 const tournamentId = ref(0);
 const showMatchEditForm = ref(false);
 const selectedMatch = ref<Match>();
-// const selectedTournament = ref<Tournament>();
+const showEditDialog = ref(false);
+const selectedTeam = ref<TeamWithoutTournament>();
+const teamName = ref('');
 let tournamentWinner = ref();
 
 onMounted(async () => {
@@ -179,7 +210,7 @@ const openMatchEditForm = (match: Match) => {
 };
 
 const saveScore = async () => {
-  console.log(selectedMatch.value);
+  console.log('selected Match: ', selectedMatch.value);
   if (selectedMatch.value) {
     await matchApi.saveScore(tournamentId.value, selectedMatch.value);
   }
@@ -208,6 +239,24 @@ const getDecidingFactor = (
   return '--';
 };
 
+const openNameEditForm = (team: TeamWithoutTournament) => {
+  selectedTeam.value = team; // Set the selected team
+  teamName.value = team.name;
+  showEditDialog.value = true;
+};
+
+const updateNameChange = async () => {
+  if (selectedTeam.value) {
+    selectedTeam.value.name = teamName.value;
+    await tournamentApi.updateTeamName(tournamentId.value, selectedTeam.value);
+    getMatches();
+    showEditDialog.value = false; // Close the dialog after saving
+    console.log('Name Updated :', teamName.value);
+  } else {
+    console.error('No team selected for editing.');
+    showEditDialog.value = false;
+  }
+};
 const getWinner = async () => {
   const winnerName = rows.value[0].team.name;
   await tournamentApi.updateTournamentWinner(tournamentId.value, winnerName);
@@ -238,7 +287,6 @@ const columns: QTableProps['columns'] = [
     label: 'Name',
     align: 'center',
     field: (row: Table) => row.team.name,
-
     sortable: true,
   },
   {
@@ -290,5 +338,24 @@ const rows = ref<Table[]>([]);
   width: fit-content;
   margin: auto;
   margin-top: 10px;
+}
+
+.hover-edit-cell {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.edit-button {
+  opacity: 0; /* Hidden by default */
+  margin-left: 10px;
+  cursor: pointer;
+  border: none;
+  font-size: 16px;
+  transition: display 1s ease;
+}
+
+.hover-edit-cell:hover .edit-button {
+  opacity: 1; /* Show on hover */
 }
 </style>

@@ -20,14 +20,10 @@ export default () => {
       apiHelper.get('tournament/tournament-types/') as Promise<
         TournamentType[]
       >,
-    updateTeamName: (
-      tournamentId: number,
-      teamId: number,
-      playerName: string
-    ) =>
+    updateTeamName: (tournamentId: number, team: TeamWithoutTournament) =>
       apiHelper.patch(
-        `team/tournaments/${tournamentId}/teams/${teamId}`,
-        playerName
+        `team/tournaments/${tournamentId}/teams/${team.id}/`,
+        team
       ) as Promise<TeamWithoutTournament>,
     updateTournamentWinner: (tournamentId: number, winnerName: string) =>
       apiHelper.post(`tournament/${tournamentId}/update_winner/`, {
