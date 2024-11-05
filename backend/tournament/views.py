@@ -44,6 +44,7 @@ class TournamentViewSet(viewsets.ModelViewSet):
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     
+    #get the url in action
     @action(detail=True, methods=['post'])
     def update_winner(self, request, pk=None):
         try:

@@ -1,7 +1,10 @@
 <template>
   <q-page class="q-pl-md" style="margin: auto; width: 70%">
     <!-- Table -->
-    <div class="q-pa-md q-mt-lg">
+    <div
+      class="q-pa-md q-mt-lg"
+      style="margin: auto; min-width: 600px; max-width: 900px; margin-top: 20px"
+    >
       <q-table
         flat
         bordered
@@ -117,6 +120,13 @@ const newTournament = ref<Tournament>({
 
 const tournaments = ref<Tournament[]>([]);
 const filter = ref('');
+
+//blank issue:
+// beforeRouteEnter(to, from, next) => {
+//     next(vm => {
+//       vm.initializeData(); // Call method that contains your onMounted logic
+//     });
+//   }
 
 onMounted(async () => {
   tournamentTypes.value = await tournamentApi.getTournamentTypes();

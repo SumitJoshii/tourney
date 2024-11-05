@@ -193,6 +193,7 @@ const showEditDialog = ref(false);
 const selectedTeam = ref<TeamWithoutTournament>();
 const teamName = ref('');
 let tournamentWinner = ref();
+const tournamentWinnerId = ref<number>();
 
 onMounted(async () => {
   console.log('Route data: ', route.params, route);
@@ -250,6 +251,12 @@ const updateNameChange = async () => {
     selectedTeam.value.name = teamName.value;
     await tournamentApi.updateTeamName(tournamentId.value, selectedTeam.value);
     getMatches();
+
+    console.log(tournamentWinnerId.value, '---', selectedTeam.value.id);
+    if (tournamentWinnerId.value == selectedTeam.value.id) {
+      getWinner();
+    }
+
     showEditDialog.value = false; // Close the dialog after saving
     console.log('Name Updated :', teamName.value);
   } else {
@@ -259,11 +266,13 @@ const updateNameChange = async () => {
 };
 const getWinner = async () => {
   const winnerName = rows.value[0].team.name;
+  tournamentWinnerId.value = rows.value[0].team.id;
   await tournamentApi.updateTournamentWinner(tournamentId.value, winnerName);
 
-  console.log('Winner updated: ', winnerName);
+  console.log('Winner updated: ', tournamentWinnerId, '-- ', winnerName);
 
   tournamentWinner.value = winnerName;
+  //debounce
   setTimeout(() => {
     tab.value = 'winner';
 
@@ -357,5 +366,9 @@ const rows = ref<Table[]>([]);
 
 .hover-edit-cell:hover .edit-button {
   opacity: 1; /* Show on hover */
+}
+
+.q-tab {
+  width: 150px;
 }
 </style>
