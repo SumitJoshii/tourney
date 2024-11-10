@@ -1,5 +1,5 @@
 <template>
-  <q-page class="q-pl-md" style="margin: auto; width: 70%">
+  <q-page class="q-pl-md" style="margin: auto; width: 70%; overflow-y: auto">
     <!-- Table -->
     <div
       class="q-pa-md q-mt-lg"
