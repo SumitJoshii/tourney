@@ -17,7 +17,7 @@
               alt=""
             />
             <div>
-              <a href="https://github.com/SumitJoshii">SumitJoshii</a>
+              <a href="https://github.com/sumitjoshii">sumitjoshii</a>
             </div>
           </div>
           <div class="links">
@@ -27,9 +27,7 @@
               alt=""
             />
             <div>
-              <a href="https://www.linkedin.com/in/sumit-joshi1/"
-                >sumit-joshi1</a
-              >
+              <a href="https://www.linkedin.com/in/sumitjoshii/">sumitjoshii</a>
             </div>
           </div>
           <div class="links">
@@ -39,7 +37,7 @@
               alt=""
             />
             <div>
-              <a href="https://x.com/Sumit_Joshi_">Sumit_Joshi_</a>
+              <a href="https://x.com/sumitjoshiix">sumitjoshiix</a>
             </div>
           </div>
         </div>
@@ -173,37 +171,37 @@ a:hover {
 
 @keyframes shake {
   0% {
-    transform: translate(1px, 1px) rotate(0deg);
+    transform: rotate(0deg);
   }
   10% {
-    transform: translate(-1px, -2px) rotate(-1deg);
+    transform: tr rotate(-5deg);
   }
   20% {
-    transform: translate(-3px, 0px) rotate(1deg);
+    transform: rotate(5deg);
   }
   30% {
-    transform: translate(3px, 2px) rotate(0deg);
+    transform: rotate(0deg);
   }
   40% {
-    transform: translate(1px, -1px) rotate(1deg);
+    transform: rotate(5deg);
   }
   50% {
-    transform: translate(-1px, 2px) rotate(-1deg);
+    transform: rotate(-5deg);
   }
   60% {
-    transform: translate(-3px, 1px) rotate(0deg);
+    transform: rotate(0deg);
   }
   70% {
-    transform: translate(3px, 1px) rotate(-1deg);
+    transform: rotate(-5deg);
   }
   80% {
-    transform: translate(-1px, -1px) rotate(1deg);
+    transform: rotate(5deg);
   }
   90% {
-    transform: translate(1px, 2px) rotate(0deg);
+    transform: rotate(0deg);
   }
   100% {
-    transform: translate(1px, -2px) rotate(-1deg);
+    transform: rotate(-5deg);
   }
 }
 </style>
