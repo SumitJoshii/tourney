@@ -14,7 +14,23 @@ declare module 'vue' {
 // good idea to move this instance creation inside of the
 // "export default () => {}" function below (which runs individually
 // for each client)
-const api = axios.create({ baseURL: 'http://54.79.223.160/api' });
+const api = axios.create({
+  baseURL: 'http://54.79.223.160/api',
+  withCredentials: true,
+});
+
+// Add CSRF token to Axios requests
+api.interceptors.request.use((config) => {
+  const csrfToken = document.cookie
+    .split('; ')
+    .find((row) => row.startsWith('csrftoken='))
+    ?.split('=')[1];
+
+  if (csrfToken) {
+    config.headers['X-CSRFToken'] = csrfToken;
+  }
+  return config;
+});
 
 export default boot(({ app }) => {
   // for use inside Vue files (Options API) through this.$axios and this.$api
